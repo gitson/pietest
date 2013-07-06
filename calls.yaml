@@ -1,0 +1,33 @@
+---
+- call: 
+    func: h
+    args: [3]
+
+- call: 
+    func: f
+    args: [3, 2]
+
+- call: 
+    func: g
+    args: [2]
+
+- call: 
+    func: u
+    args: [2]
+
+- ret: 
+    func: u
+    val: 
+
+- ret: 
+    func: g
+    val: 0
+
+- ret: 
+    func: f
+    val: 3
+
+- ret: 
+    func: h
+    val:
+

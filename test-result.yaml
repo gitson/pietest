@@ -1,0 +1,6 @@
+<test name="test1">
+<check line="10" expression="b == a + 3">
+<call obtained="u(2)None" expected="u(3)None">
+<test name="test2">
+<check line="18" expression="a == 0">
+<call obtained="f(4, 2)4" expected="f(4, 2)3">
