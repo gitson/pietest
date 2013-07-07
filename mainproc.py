@@ -11,6 +11,15 @@ STREAM = 'stderr'
 MSP = 4 * ' '
 TSP = 6 * ' '
 ESP = 10 * ' '
+OUT = ''
+
+def print_output(s):
+	print s
+def string_output(s):
+	global OUT
+	OUT += str(s) + '\n'
+
+OUTPUT = string_output
 
 # --- internals ---
 
@@ -71,32 +80,31 @@ class TCheck(TOutput):
 
 def process_calls(calls):
 	for call in calls:
-		print(TCall(call))
+		OUTPUT(TCall(call))
 
 def process_checks(checks, line_no):
 	for check in checks:
-		print TCheck(check, line_no)
+		OUTPUT(TCheck(check, line_no))
 
-if __name__ == "__main__":
-	with open(MAIN_FILE,'rt') as f:
+def runner(source):
 		test_name = None
 		line_no = 0
-		for line in f:
+		for line in source:
 			line_no += 1
 			sline = line.lstrip()
 			sline = sline.rstrip()
 			rematch = re.match(TESTSex, sline)
 			if rematch:
 				test_name = rematch.group(1)
-				print(TOutput('- test:\\n' + MSP + 'name: ' + test_name + '\\n' + MSP + 'content: '))
+				OUTPUT(TOutput('- test:\\n' + MSP + 'name: ' + test_name + '\\n' + MSP + 'content: '))
 				continue
 			rematch = re.match(TESTEex, sline)
 			if rematch:
 				if test_name:
 					test_name = None
-					print(TOutput('- ignore:\\n'))
+					OUTPUT(TOutput('- ignore:\\n'))
 				else:
-					print('Line ' + line_no + ': !!! ERROR: END without active TEST !!!\n')
+					OUTPUT('Line ' + line_no + ': !!! ERROR: END without active TEST !!!\n')
 				continue		
 			if test_name:
 				rematch = re.match(CALLS, sline)
@@ -109,4 +117,10 @@ if __name__ == "__main__":
 					checks = rematch.group(1).split(';')
 					process_checks([check.strip() for check in checks], line_no)
 					continue		
-			print(line)
+			OUTPUT(line)
+
+if __name__ == "__main__":
+	with open(MAIN_FILE,'rt') as f:
+		runner(f)
+	if len(OUT) != 0:
+		print OUT
